@@ -1,0 +1,1 @@
+INSERT INTO loans (item_id, description, fromId, toId, starts, ends) VALUES (123213, 'This is a very good loan.', 1280, 1325, TIMESTAMP '2006-01-01 15:36:38', TIMESTAMP '2006-01-01 17:36:38');
