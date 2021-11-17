@@ -49,20 +49,24 @@ public class LoansDataResource {
 
     @POST
     public Response createLoan(LoanEntity loanEntity) {
-        loanEntity = loansDataProviderBean.createLoan(loanEntity);
-        return Response.status(Response.Status.CONFLICT).entity(loanEntity).build();
+        if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
+                loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } else {
+            loanEntity = loansDataProviderBean.createLoan(loanEntity);
+        }
+        return Response.status(Response.Status.OK).entity(loanEntity).build();
     }
 
     @PUT
     @Path("{loanId}")
     public Response putLoan(@PathParam("loanId") Integer loanId,
-                                     LoanEntity loanEntity) {
+                            LoanEntity loanEntity) {
         loanEntity = loansDataProviderBean.putLoan(loanId, loanEntity);
         if (loanEntity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.status(Response.Status.NOT_MODIFIED).build();
-
+        return Response.status(Response.Status.OK).build();
     }
 
     @DELETE
