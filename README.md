@@ -18,8 +18,8 @@ Available at: localhost:8080/v1/loans
 ## Build app's docker image and push it to repo
 ```bash
 docker build -t app-img .
-docker tag app-img uniborrow/loans
-docker push uniborrow/loans 
+docker tag app-img efodx/uniborrow-loans
+docker push efodx/uniborrow-loans 
 ```
 
 ## Create a docker network and run the app's database and app through it
