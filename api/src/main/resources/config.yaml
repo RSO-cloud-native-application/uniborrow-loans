@@ -12,5 +12,5 @@ kumuluzee:
       connection-url: jdbc:postgresql://localhost:5432/loans
       username: dbuser
       password: postgres
-rest-properties:
+administration:
   maintenance-mode: false

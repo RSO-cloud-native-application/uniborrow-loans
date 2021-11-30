@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 @RequestScoped
 public class LoansDataProviderBean {
-//
+
     private Logger log = Logger.getLogger(LoansDataProviderBean.class.getName());
 
     @Inject
@@ -25,8 +25,7 @@ public class LoansDataProviderBean {
     public List<LoanEntity> getLoan() {
         TypedQuery<LoanEntity> query = em.createNamedQuery(
                 "LoanEntity.getAll", LoanEntity.class);
-        List<LoanEntity> resultList = query.getResultList();
-        return resultList;
+        return query.getResultList();
     }
 
     public List<LoanEntity> getLoansFilter(UriInfo uriInfo) {

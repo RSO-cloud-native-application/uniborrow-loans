@@ -7,12 +7,12 @@ import lombok.Data;
 import javax.enterprise.context.ApplicationScoped;
 
 @Data
-@ConfigBundle("rest-properties")
+@ConfigBundle("administration")
 @ApplicationScoped
 public class RestProperties {
 
     @ConfigValue(watch = true)
     private Boolean maintenanceMode;
-
+    
     private Boolean broken;
 }

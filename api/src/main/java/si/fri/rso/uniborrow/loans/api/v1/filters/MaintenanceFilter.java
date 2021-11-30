@@ -17,9 +17,8 @@ public class MaintenanceFilter implements ContainerRequestFilter {
     private RestProperties restProperties;
 
     @Override
-    public void filter(ContainerRequestContext ctx)  {
+    public void filter(ContainerRequestContext ctx) {
         if (restProperties.getMaintenanceMode()) {
-
             ctx.abortWith(Response.status(Response.Status.FORBIDDEN)
                     .entity("{\"message\" : \"Maintenance mode enabled\"}")
                     .build());
