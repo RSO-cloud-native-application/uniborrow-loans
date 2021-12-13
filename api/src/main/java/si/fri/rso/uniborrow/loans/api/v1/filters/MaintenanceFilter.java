@@ -1,6 +1,6 @@
 package si.fri.rso.uniborrow.loans.api.v1.filters;
 
-import si.fri.rso.uniborrow.loans.services.config.RestProperties;
+import si.fri.rso.uniborrow.loans.services.config.AdministrationProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,11 +14,11 @@ import javax.ws.rs.ext.Provider;
 public class MaintenanceFilter implements ContainerRequestFilter {
 
     @Inject
-    private RestProperties restProperties;
+    private AdministrationProperties administrationProperties;
 
     @Override
     public void filter(ContainerRequestContext ctx) {
-        if (restProperties.getMaintenanceMode()) {
+        if (administrationProperties.getMaintenanceMode()) {
             ctx.abortWith(Response.status(Response.Status.FORBIDDEN)
                     .entity("{\"message\" : \"Maintenance mode enabled\"}")
                     .build());

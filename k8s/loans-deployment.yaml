@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loans-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loans
+  template:
+    metadata:
+      labels:
+        app: loans
+    spec:
+      containers:
+        - image: efodx/uniborrow-loans:latest
+          name: loans
+          env:
+            - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
+              value: jdbc:postgresql://tai.db.elephantsql.com/rdvoasbi
+            - name: KUMULUZEE_DATASOURCES0_USERNAME
+              value: rdvoasbi
+            - name: KUMULUZEE_DATASOURCES0_PASSWORD
+              value: YsgxdUhrzstKq8-ehChAA8OmPbmkc8d_
+            - name: KUMULUZEE_CONFIG_CONSUL_AGENT
+              value: http://consul-consul-server:8500/
+            - name: KUMULUZEE_DISCOVERY_CONSUL_AGENT
+              value: http://consul-consul-server:8500/
+          ports:
+            - containerPort: 8080
+              name: server
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: server
+            initialDelaySeconds: 60
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: server
+            initialDelaySeconds: 60
+            periodSeconds: 3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: loans
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: server
+  selector:
+    app: loans

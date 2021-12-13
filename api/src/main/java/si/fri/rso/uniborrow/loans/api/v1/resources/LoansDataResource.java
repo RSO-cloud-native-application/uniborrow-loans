@@ -1,24 +1,18 @@
 package si.fri.rso.uniborrow.loans.api.v1.resources;
 
+import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
+import si.fri.rso.uniborrow.loans.services.beans.LoansDataProviderBean;
+import si.fri.rso.uniborrow.loans.services.users.UsersService;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.logging.Logger;
-
-import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
-import si.fri.rso.uniborrow.loans.services.beans.LoansDataProviderBean;
 
 @ApplicationScoped
 @Path("/loans")
@@ -27,6 +21,8 @@ import si.fri.rso.uniborrow.loans.services.beans.LoansDataProviderBean;
 public class LoansDataResource {
 
     private Logger log = Logger.getLogger(LoansDataResource.class.getName());
+    @Inject
+    private UsersService usersService;
 
     @Inject
     private LoansDataProviderBean loansDataProviderBean;
@@ -36,6 +32,7 @@ public class LoansDataResource {
 
     @GET
     public Response getAllLoans() {
+        usersService.checkUserExists("someUser");
         List<LoanEntity> loanEntities = loansDataProviderBean.getLoansFilter(uriInfo);
         return Response.status(Response.Status.OK).entity(loanEntities).build();
     }
@@ -62,6 +59,7 @@ public class LoansDataResource {
     @Path("{loanId}")
     public Response putLoan(@PathParam("loanId") Integer loanId,
                             LoanEntity loanEntity) {
+
         loanEntity = loansDataProviderBean.putLoan(loanId, loanEntity);
         if (loanEntity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();

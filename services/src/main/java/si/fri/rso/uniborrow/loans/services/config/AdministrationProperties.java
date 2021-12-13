@@ -9,10 +9,10 @@ import javax.enterprise.context.ApplicationScoped;
 @Data
 @ConfigBundle("administration")
 @ApplicationScoped
-public class RestProperties {
+public class AdministrationProperties {
 
     @ConfigValue(watch = true)
     private Boolean maintenanceMode;
-    
-    private Boolean broken;
+
+    private Boolean broken = false;
 }

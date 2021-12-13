@@ -1,5 +1,11 @@
 # RSO: Loans microservice
 
+## Run application's configuration server
+
+```bash
+consul agent -dev
+```
+
 ## Run application's database in docker
 
 ```bash
@@ -7,15 +13,17 @@ docker run -d --name loans-db -e POSTGRES_USER=dbuser -e POSTGRES_PASSWORD=postg
 ```
 
 ## Build and run application
+
 ```bash
 mvn clean package
 cd api/target
 java -jar loans-api-1.0.0-SNAPSHOT.jar
 ```
+
 Available at: localhost:8080/v1/loans
 
-
 ## Build app's docker image and push it to repo
+
 ```bash
 docker build -t app-img .
 docker tag app-img efodx/uniborrow-loans
@@ -23,6 +31,7 @@ docker push efodx/uniborrow-loans
 ```
 
 ## Create a docker network and run the app's database and app through it
+
 ```bash
 docker build -t app-img
 docker network create loans

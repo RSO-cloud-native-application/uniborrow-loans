@@ -9,8 +9,8 @@ kumuluzee:
       port: 8080
   datasources:
     - jndi-name: jdbc/loansDS
-      connection-url: jdbc:postgresql://localhost:5432/loans
-      username: dbuser
-      password: postgres
+      connection-url: jdbc:postgresql://tai.db.elephantsql.com/rdvoasbi
+      username: rdvoasbi
+      password: YsgxdUhrzstKq8-ehChAA8OmPbmkc8d_
 administration:
   maintenance-mode: false

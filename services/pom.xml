@@ -34,6 +34,10 @@
             <artifactId>kumuluzee-rest-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.kumuluz.ee.metrics</groupId>
+            <artifactId>kumuluzee-metrics-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.json</groupId>
@@ -46,7 +50,11 @@
             <groupId>si.fri.rso.uniborrow</groupId>
             <artifactId>loans-models</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.eclipse.microprofile.metrics</groupId>
+            <artifactId>microprofile-metrics-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
     </dependencies>
 
 </project>
