@@ -6,11 +6,11 @@ kumuluzee:
   server:
     base-url: http://localhost:8080
     http:
-      port: 8080
+      port: 8070
   datasources:
     - jndi-name: jdbc/loansDS
-      connection-url: jdbc:postgresql://tai.db.elephantsql.com/rdvoasbi
-      username: rdvoasbi
-      password: YsgxdUhrzstKq8-ehChAA8OmPbmkc8d_
+      connection-url: jdbc:postgresql://localhost:5432/commondb
+      username: dbuser
+      password: postgres
 administration:
   maintenance-mode: false
