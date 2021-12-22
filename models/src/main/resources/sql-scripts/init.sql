@@ -1,1 +1,3 @@
-INSERT INTO loans (item_id, description, fromId, toId, starts, ends) VALUES (123213, 'This is a very good loan.', 1280, 1325, TIMESTAMP '2006-01-01 15:36:38', TIMESTAMP '2006-01-01 17:36:38');
+INSERT INTO loans (item_id, description, from_id, to_id, starts, ends, proposed_by, accepted_state) VALUES (123213, 'This is a very good loan.', 1280, 1325, TIMESTAMP '2006-01-01 15:36:38', TIMESTAMP '2006-01-01 17:36:38', 1280, 'ACCEPTED');
+INSERT INTO loans (item_id, description, from_id, to_id, starts, ends, proposed_by, accepted_state) VALUES (1, 'This is a very good loan.', 12, 1325, TIMESTAMP '2006-01-01 15:36:38', TIMESTAMP '2006-01-01 17:36:38', 1280, 'REJECTED');
+INSERT INTO loans (item_id, description, from_id, to_id, starts, ends, proposed_by, accepted_state) VALUES (12, 'This is a very good loan.', 12, 25, TIMESTAMP '2006-01-01 15:36:38', TIMESTAMP '2006-01-01 17:36:38', 25, 'PENDING');

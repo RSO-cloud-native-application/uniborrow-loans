@@ -1,7 +1,9 @@
 package si.fri.rso.uniborrow.loans.api.v1.resources;
 
+import si.fri.rso.uniborrow.loans.models.entities.AcceptedState;
 import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
 import si.fri.rso.uniborrow.loans.services.beans.LoansDataProviderBean;
+import si.fri.rso.uniborrow.loans.services.items.ItemsService;
 import si.fri.rso.uniborrow.loans.services.users.UsersService;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,8 +23,12 @@ import java.util.logging.Logger;
 public class LoansDataResource {
 
     private Logger log = Logger.getLogger(LoansDataResource.class.getName());
+
     @Inject
     private UsersService usersService;
+
+    @Inject
+    private ItemsService itemsService;
 
     @Inject
     private LoansDataProviderBean loansDataProviderBean;
@@ -32,22 +38,36 @@ public class LoansDataResource {
 
     @GET
     public Response getAllLoans() {
-        usersService.checkUserExists("someUser");
         List<LoanEntity> loanEntities = loansDataProviderBean.getLoansFilter(uriInfo);
         return Response.status(Response.Status.OK).entity(loanEntities).build();
     }
 
     @GET
     @Path("/{loanId}")
-    public Response getLoans(@PathParam("loanId") Integer loanId) {
+    public Response getLoan(@PathParam("loanId") Integer loanId) {
         LoanEntity loanEntity = loansDataProviderBean.getLoan(loanId);
         return Response.status(Response.Status.OK).entity(loanEntity).build();
     }
 
     @POST
-    public Response createLoan(LoanEntity loanEntity) {
+    @Path("/accept")
+    public Response acceptLoan(Integer loanId) {
+        LoanEntity acceptedLoan = loansDataProviderBean.acceptLoan(loanId);
+        if (acceptedLoan == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        itemsService.markItemOnLoan(acceptedLoan.getItemId());
+        return Response.status(Response.Status.OK).entity(acceptedLoan).build();
+    }
+
+    @POST
+    @Path("/propose")
+    public Response proposeLoan(LoanEntity loanEntity) {
+        loanEntity.setAcceptedState(AcceptedState.PENDING);
         if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
-                loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null) {
+                loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
+                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId()) || !itemsService.checkItemExists(loanEntity.getItemId())
+        ) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         } else {
             loanEntity = loansDataProviderBean.createLoan(loanEntity);
@@ -55,12 +75,28 @@ public class LoansDataResource {
         return Response.status(Response.Status.OK).entity(loanEntity).build();
     }
 
-    @PUT
-    @Path("{loanId}")
-    public Response putLoan(@PathParam("loanId") Integer loanId,
-                            LoanEntity loanEntity) {
+    @POST
+    public Response createLoan(LoanEntity loanEntity) {
+        if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
+                loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
+                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId())
+        ) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } else {
+            loanEntity = loansDataProviderBean.createLoan(loanEntity);
+        }
+        return Response.status(Response.Status.OK).entity(loanEntity).build();
+    }
 
-        loanEntity = loansDataProviderBean.putLoan(loanId, loanEntity);
+    @PATCH
+    @Path("{loanId}")
+    public Response patchLoan(@PathParam("loanId") Integer loanId,
+                              LoanEntity loanEntity) {
+        if (loanEntity.getFromId() != null && !usersService.checkUserExists(loanEntity.getFromId()) ||
+                (loanEntity.getToId() != null && !usersService.checkUserExists(loanEntity.getToId())) || !itemsService.checkItemExists(loanEntity.getItemId())) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        loanEntity = loansDataProviderBean.patchLoan(loanId, loanEntity);
         if (loanEntity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

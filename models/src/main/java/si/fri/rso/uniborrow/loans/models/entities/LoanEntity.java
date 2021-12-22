@@ -25,10 +25,10 @@ public class LoanEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "fromId")
+    @Column(name = "from_id")
     private Integer fromId;
 
-    @Column(name = "toId")
+    @Column(name = "to_id")
     private Integer toId;
 
     @Column(name = "starts")
@@ -37,4 +37,11 @@ public class LoanEntity {
     @Column(name = "ends")
     private Instant endTime;
 
+    @Column(name = "proposed_by")
+    private Integer proposedById;
+
+    @Column(name = "accepted_state")
+    @Enumerated(EnumType.STRING)
+    private AcceptedState acceptedState;
 }
+

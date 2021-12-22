@@ -2,6 +2,7 @@ package si.fri.rso.uniborrow.loans.services.beans;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import si.fri.rso.uniborrow.loans.models.entities.AcceptedState;
 import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
 
 import javax.enterprise.context.RequestScoped;
@@ -49,8 +50,7 @@ public class LoansDataProviderBean {
             beginTx();
             em.persist(loanEntity);
             commitTx();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             rollbackTx();
         }
 
@@ -60,27 +60,39 @@ public class LoansDataProviderBean {
         return loanEntity;
     }
 
-    public LoanEntity putLoan(Integer id, LoanEntity updatedLoanEntity) {
-
+    public LoanEntity patchLoan(Integer id, LoanEntity updatedLoanEntity) {
         LoanEntity c = em.find(LoanEntity.class, id);
-
         if (c == null) {
             return null;
         }
-
-
         try {
             beginTx();
             updatedLoanEntity.setId(c.getId());
             updatedLoanEntity = em.merge(updatedLoanEntity);
             commitTx();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             rollbackTx();
         }
 
         return updatedLoanEntity;
     }
+
+    public LoanEntity acceptLoan(Integer id) {
+        LoanEntity c = em.find(LoanEntity.class, id);
+        if (c == null || c.getAcceptedState() != AcceptedState.PENDING) {
+            return null;
+        }
+        try {
+            beginTx();
+            c.setAcceptedState(AcceptedState.ACCEPTED);
+            commitTx();
+        } catch (Exception e) {
+            rollbackTx();
+        }
+
+        return c;
+    }
+
 
     public boolean deleteLoan(Integer id) {
 
@@ -91,12 +103,10 @@ public class LoansDataProviderBean {
                 beginTx();
                 em.remove(loanEntity);
                 commitTx();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 rollbackTx();
             }
-        }
-        else {
+        } else {
             return false;
         }
 
