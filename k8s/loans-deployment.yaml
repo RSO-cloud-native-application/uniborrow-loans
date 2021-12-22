@@ -13,7 +13,7 @@ spec:
         app: uniborrow-loans
     spec:
       containers:
-        - image: efodx/uniborrow-loans:2021-12-22-18-46-34
+        - image: efodx/uniborrow-loans:2021-12-22-19-39-27
           name: uniborrow-loans
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
@@ -26,6 +26,8 @@ spec:
               value: http://consul-consul-server:8500/
             - name: KUMULUZEE_DISCOVERY_CONSUL_AGENT
               value: http://consul-consul-server:8500/
+            - name: KUMULUZEE_DISCOVERY_CLUSTER
+              value: uniborrow-cluster
           ports:
             - containerPort: 8080
               name: server
@@ -35,13 +37,15 @@ spec:
               path: /health/live
               port: server
             initialDelaySeconds: 60
-            periodSeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 3
           readinessProbe:
             httpGet:
               path: /health/ready
               port: server
             initialDelaySeconds: 60
-            periodSeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 3
 
 ---
 
@@ -53,7 +57,5 @@ spec:
   type: ClusterIP
   ports:
     - port: 8080
-      protocol: TCP
-      targetPort: server
   selector:
     app: uniborrow-loans

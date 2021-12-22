@@ -50,8 +50,8 @@ public class LoansDataResource {
     }
 
     @POST
-    @Path("/accept")
-    public Response acceptLoan(Integer loanId) {
+    @Path("/{loanId}/accept")
+    public Response acceptLoan(@PathParam("loanId") Integer loanId) {
         LoanEntity acceptedLoan = loansDataProviderBean.acceptLoan(loanId);
         if (acceptedLoan == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
