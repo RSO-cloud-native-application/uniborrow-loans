@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loans-deployment
+  name: uniborrow-loans-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loans
+      app: uniborrow-loans
   template:
     metadata:
       labels:
-        app: loans
+        app: uniborrow-loans
     spec:
       containers:
-        - image: efodx/uniborrow-loans:latest
-          name: loans
+        - image: efodx/uniborrow-loans:2021-12-22-18-46-34
+          name: uniborrow-loans
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
               value: jdbc:postgresql://tai.db.elephantsql.com/rdvoasbi
@@ -48,7 +48,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: loans
+  name: uniborrow-loans
 spec:
   type: ClusterIP
   ports:
@@ -56,4 +56,4 @@ spec:
       protocol: TCP
       targetPort: server
   selector:
-    app: loans
+    app: uniborrow-loans
