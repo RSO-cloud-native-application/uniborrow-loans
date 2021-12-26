@@ -1,6 +1,7 @@
 package si.fri.rso.uniborrow.loans.models.entities;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -10,9 +11,12 @@ import java.time.Instant;
 @NamedQueries(value =
         {
                 @NamedQuery(name = "LoanEntity.getAll",
-                        query = "SELECT im FROM LoanEntity im")
+                        query = "SELECT im FROM LoanEntity im"),
+                @NamedQuery(name = "LoanEntity.getByItemId",
+                        query = "SELECT im FROM LoanEntity im WHERE im.itemId = :itemId")
         })
 @Data
+@ToString
 public class LoanEntity {
 
     @Id

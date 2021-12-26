@@ -23,7 +23,7 @@ public class LoansDataProviderBean {
     @Inject
     private EntityManager em;
 
-    public List<LoanEntity> getLoan() {
+    public List<LoanEntity> getAllLoans() {
         TypedQuery<LoanEntity> query = em.createNamedQuery(
                 "LoanEntity.getAll", LoanEntity.class);
         return query.getResultList();
@@ -37,7 +37,7 @@ public class LoansDataProviderBean {
         return JPAUtils.queryEntities(em, LoanEntity.class, queryParameters);
     }
 
-    public LoanEntity getLoan(Integer id) {
+    public LoanEntity getAllLoans(Integer id) {
         LoanEntity loanData = em.find(LoanEntity.class, id);
         if (loanData == null) {
             throw new NotFoundException();
@@ -93,6 +93,9 @@ public class LoansDataProviderBean {
         return c;
     }
 
+    public List<LoanEntity> getLoansByItemId(Integer id) {
+        return em.createNamedQuery("LoanEntity.getByItemId", LoanEntity.class).setParameter("itemId", id).getResultList();
+    }
 
     public boolean deleteLoan(Integer id) {
 

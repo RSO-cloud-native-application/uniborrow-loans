@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -45,7 +46,7 @@ public class LoansDataResource {
     @GET
     @Path("/{loanId}")
     public Response getLoan(@PathParam("loanId") Integer loanId) {
-        LoanEntity loanEntity = loansDataProviderBean.getLoan(loanId);
+        LoanEntity loanEntity = loansDataProviderBean.getAllLoans(loanId);
         return Response.status(Response.Status.OK).entity(loanEntity).build();
     }
 
@@ -66,7 +67,7 @@ public class LoansDataResource {
         loanEntity.setAcceptedState(AcceptedState.PENDING);
         if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
                 loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
-                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId()) || !itemsService.checkItemExists(loanEntity.getItemId())
+                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId()) || !itemsService.checkItemAvailable(loanEntity.getItemId())
         ) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         } else {
@@ -93,7 +94,7 @@ public class LoansDataResource {
     public Response patchLoan(@PathParam("loanId") Integer loanId,
                               LoanEntity loanEntity) {
         if (loanEntity.getFromId() != null && !usersService.checkUserExists(loanEntity.getFromId()) ||
-                (loanEntity.getToId() != null && !usersService.checkUserExists(loanEntity.getToId())) || !itemsService.checkItemExists(loanEntity.getItemId())) {
+                (loanEntity.getToId() != null && !usersService.checkUserExists(loanEntity.getToId())) || !itemsService.checkItemAvailable(loanEntity.getItemId())) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         loanEntity = loansDataProviderBean.patchLoan(loanId, loanEntity);
