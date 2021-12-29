@@ -30,14 +30,13 @@ public class LoansDataProviderBean {
     }
 
     public List<LoanEntity> getLoansFilter(UriInfo uriInfo) {
-
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).defaultOffset(0)
                 .build();
 
         return JPAUtils.queryEntities(em, LoanEntity.class, queryParameters);
     }
 
-    public LoanEntity getAllLoans(Integer id) {
+    public LoanEntity getLoan(Integer id) {
         LoanEntity loanData = em.find(LoanEntity.class, id);
         if (loanData == null) {
             throw new NotFoundException();

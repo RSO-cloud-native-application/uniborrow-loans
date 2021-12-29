@@ -1,5 +1,6 @@
 package si.fri.rso.uniborrow.loans.api.v1.resources;
 
+import com.kumuluz.ee.logs.cdi.Log;
 import si.fri.rso.uniborrow.loans.models.entities.AcceptedState;
 import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
 import si.fri.rso.uniborrow.loans.services.beans.LoansDataProviderBean;
@@ -14,9 +15,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Log
 @ApplicationScoped
 @Path("/loans")
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,7 +47,7 @@ public class LoansDataResource {
     @GET
     @Path("/{loanId}")
     public Response getLoan(@PathParam("loanId") Integer loanId) {
-        LoanEntity loanEntity = loansDataProviderBean.getAllLoans(loanId);
+        LoanEntity loanEntity = loansDataProviderBean.getLoan(loanId);
         return Response.status(Response.Status.OK).entity(loanEntity).build();
     }
 
@@ -69,7 +70,7 @@ public class LoansDataResource {
                 loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
                 !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId()) || !itemsService.checkItemAvailable(loanEntity.getItemId())
         ) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(loanEntity).build();
         } else {
             loanEntity = loansDataProviderBean.createLoan(loanEntity);
         }

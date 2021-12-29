@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Item {
-    private int imageId;
+    private int itemId;
     private String category;
     private String description;
     private int score;
