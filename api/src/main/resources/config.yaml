@@ -12,9 +12,16 @@ kumuluzee:
       connection-url: jdbc:postgresql://tai.db.elephantsql.com/rdvoasbi
       username: rdvoasbi
       password: YsgxdUhrzstKq8-ehChAA8OmPbmkc8d_
+      pool:
+        max-size: 1
+  config:
+    start-retry-delay-ms: 500
+    max-retry-delay-ms: 900000
+    etcd:
+      hosts: 'http://localhost:2379'
   discovery:
-    consul:
-      agent: http://localhost:8500
+    etcd:
+      hosts: 'http://localhost:2379'
   health:
     checks:
       data-source-health-check:

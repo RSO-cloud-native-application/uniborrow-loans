@@ -74,13 +74,21 @@ public class LoansDataProviderBean {
     }
 
     public LoanEntity acceptLoan(Integer id) {
+        return changeLoanState(id, AcceptedState.ACCEPTED);
+    }
+
+    public LoanEntity rejectLoan(Integer id) {
+        return changeLoanState(id, AcceptedState.REJECTED);
+    }
+
+    private LoanEntity changeLoanState(Integer id, AcceptedState acceptedState) {
         LoanEntity c = em.find(LoanEntity.class, id);
-        if (c == null || c.getAcceptedState() != AcceptedState.PENDING) {
+        if (c == null || c.getAcceptedState() != AcceptedState.ACCEPTED) {
             return null;
         }
         try {
             beginTx();
-            c.setAcceptedState(AcceptedState.ACCEPTED);
+            c.setAcceptedState(acceptedState);
             commitTx();
         } catch (Exception e) {
             rollbackTx();
@@ -88,6 +96,7 @@ public class LoansDataProviderBean {
 
         return c;
     }
+
 
     public List<LoanEntity> getLoansByItemId(Integer id) {
         return em.createNamedQuery("LoanEntity.getByItemId", LoanEntity.class).setParameter("itemId", id).getResultList();

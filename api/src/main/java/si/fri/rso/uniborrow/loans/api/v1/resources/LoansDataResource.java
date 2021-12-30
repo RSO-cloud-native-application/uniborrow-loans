@@ -63,6 +63,16 @@ public class LoansDataResource {
     }
 
     @POST
+    @Path("/{loanId}/reject")
+    public Response rejectLoan(@PathParam("loanId") Integer loanId) {
+        LoanEntity rejectedLoan = loansDataProviderBean.rejectLoan(loanId);
+        if (rejectedLoan == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.status(Response.Status.OK).entity(rejectedLoan).build();
+    }
+
+    @POST
     @Path("/propose")
     public Response proposeLoan(LoanEntity loanEntity) {
         loanEntity.setAcceptedState(AcceptedState.PENDING);
