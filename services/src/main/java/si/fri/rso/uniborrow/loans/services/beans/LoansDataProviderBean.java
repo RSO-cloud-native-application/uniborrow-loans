@@ -3,7 +3,7 @@ package si.fri.rso.uniborrow.loans.services.beans;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import org.eclipse.microprofile.metrics.annotation.Counted;
-import org.eclipse.microprofile.metrics.annotation.Metered;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import si.fri.rso.uniborrow.loans.models.entities.AcceptedState;
 import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
 
@@ -24,7 +24,7 @@ public class LoansDataProviderBean {
     @Inject
     private EntityManager em;
 
-    @Metered
+    @Timed
     public List<LoanEntity> getLoansFilter(UriInfo uriInfo) {
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).defaultOffset(0)
                 .build();
