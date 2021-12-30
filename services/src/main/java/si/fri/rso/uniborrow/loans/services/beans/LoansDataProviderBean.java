@@ -2,13 +2,14 @@ package si.fri.rso.uniborrow.loans.services.beans;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Metered;
 import si.fri.rso.uniborrow.loans.models.entities.AcceptedState;
 import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
@@ -23,12 +24,7 @@ public class LoansDataProviderBean {
     @Inject
     private EntityManager em;
 
-    public List<LoanEntity> getAllLoans() {
-        TypedQuery<LoanEntity> query = em.createNamedQuery(
-                "LoanEntity.getAll", LoanEntity.class);
-        return query.getResultList();
-    }
-
+    @Metered
     public List<LoanEntity> getLoansFilter(UriInfo uriInfo) {
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).defaultOffset(0)
                 .build();
@@ -44,6 +40,7 @@ public class LoansDataProviderBean {
         return loanData;
     }
 
+    @Counted
     public LoanEntity createLoan(LoanEntity loanEntity) {
         try {
             beginTx();

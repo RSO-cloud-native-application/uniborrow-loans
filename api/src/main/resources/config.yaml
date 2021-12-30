@@ -15,6 +15,15 @@ kumuluzee:
   discovery:
     consul:
       agent: http://localhost:8500
+  health:
+    checks:
+      data-source-health-check:
+        type: liveness
+        jndi-name: jdbc/loansDS
+    metrics:
+      web-instrumentation:
+        - name: loans-endpoint
+          url-pattern: /v1/loans/*
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
                             <Configuration name="comments">
