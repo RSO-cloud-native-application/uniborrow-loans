@@ -50,7 +50,7 @@
             </dependency>
 
             <dependency>
-                <artifactId>kumuluzee-config-consul</artifactId>
+                <artifactId>kumuluzee-config-etcd</artifactId>
                 <groupId>com.kumuluz.ee.config</groupId>
                 <version>${kumuluzee-config.version}</version>
             </dependency>
@@ -77,7 +77,7 @@
             </dependency>
             <dependency>
                 <groupId>com.kumuluz.ee.discovery</groupId>
-                <artifactId>kumuluzee-discovery-consul</artifactId>
+                <artifactId>kumuluzee-discovery-etcd</artifactId>
                 <version>${kumuluzee-discovery.version}</version>
             </dependency>
             <dependency>
