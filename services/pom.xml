@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.kumuluz.ee.discovery</groupId>
-            <artifactId>kumuluzee-discovery-consul</artifactId>
+            <artifactId>kumuluzee-discovery-etcd</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
