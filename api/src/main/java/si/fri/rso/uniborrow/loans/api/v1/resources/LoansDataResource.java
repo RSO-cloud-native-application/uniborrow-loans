@@ -4,6 +4,7 @@ import com.kumuluz.ee.logs.cdi.Log;
 import si.fri.rso.uniborrow.loans.models.entities.AcceptedState;
 import si.fri.rso.uniborrow.loans.models.entities.LoanEntity;
 import si.fri.rso.uniborrow.loans.services.beans.LoansDataProviderBean;
+import si.fri.rso.uniborrow.loans.services.cash.CashService;
 import si.fri.rso.uniborrow.loans.services.items.ItemsService;
 import si.fri.rso.uniborrow.loans.services.users.UsersService;
 
@@ -14,8 +15,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.time.Instant;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Log
 @ApplicationScoped
@@ -24,13 +25,14 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 public class LoansDataResource {
 
-    private Logger log = Logger.getLogger(LoansDataResource.class.getName());
-
     @Inject
     private UsersService usersService;
 
     @Inject
     private ItemsService itemsService;
+
+    @Inject
+    private CashService cashService;
 
     @Inject
     private LoansDataProviderBean loansDataProviderBean;
@@ -58,8 +60,18 @@ public class LoansDataResource {
         if (acceptedLoan == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        itemsService.markItemOnLoan(acceptedLoan.getItemId());
-        return Response.status(Response.Status.OK).entity(acceptedLoan).build();
+        float receivingCash = cashService.getUserCash(acceptedLoan.getFromId());
+        if (receivingCash > acceptedLoan.getPrice()) {
+            itemsService.markItemOnLoan(acceptedLoan.getItemId());
+            boolean cashSent = cashService.sendCashFromTo(acceptedLoan.getPrice(), acceptedLoan.getFromId(), acceptedLoan.getToId());
+            if (cashSent) {
+                return Response.status(Response.Status.OK).entity(acceptedLoan).build();
+            } else {
+                return Response.status(Response.Status.EXPECTATION_FAILED).entity("CASH WAS NOT SENT.").build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("NOT ENOUGH CASH").build();
+        }
     }
 
     @POST
@@ -79,6 +91,7 @@ public class LoansDataResource {
         if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
                 loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
                 !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId()) || !itemsService.checkItemAvailable(loanEntity.getItemId())
+                || loanEntity.getStartTime().isBefore(Instant.now()) || loanEntity.getStartTime().isBefore(loanEntity.getEndTime())
         ) {
             return Response.status(Response.Status.BAD_REQUEST).entity(loanEntity).build();
         } else {

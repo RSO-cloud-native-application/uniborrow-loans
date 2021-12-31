@@ -7,12 +7,9 @@ import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class UsersService {
-
-    private Logger log = Logger.getLogger(UsersService.class.getName());
 
     @Inject
     @DiscoverService(value = "uniborrow-users-service", environment = "dev", version = "1.0.0")
