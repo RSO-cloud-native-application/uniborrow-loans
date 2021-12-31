@@ -47,5 +47,8 @@ public class LoanEntity {
     @Column(name = "accepted_state")
     @Enumerated(EnumType.STRING)
     private AcceptedState acceptedState;
+
+    @Column(name = "price")
+    private Float price;
 }
 
