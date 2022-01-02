@@ -83,7 +83,7 @@ public class LoansDataProviderBean {
 
     private LoanEntity changeLoanState(Integer id, AcceptedState acceptedState) {
         LoanEntity c = em.find(LoanEntity.class, id);
-        if (c == null || c.getAcceptedState() != AcceptedState.ACCEPTED) {
+        if (c == null || c.getAcceptedState() != AcceptedState.PENDING) {
             return null;
         }
         try {

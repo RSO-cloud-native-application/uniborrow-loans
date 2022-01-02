@@ -27,11 +27,16 @@ public class CashService {
     }
 
     public float getUserCash(Integer userId) {
-        Float getCash = webTarget.path("/v1/cash")
-                .path(userId.toString())
-                .queryParam("currency", "EUR")
-                .request(MediaType.APPLICATION_JSON).get(Float.class);
-        if (getCash == null) {
+        Float getCash;
+        try {
+            getCash = webTarget.path("/v1/cash")
+                    .path(userId.toString())
+                    .queryParam("currency", "EUR")
+                    .request(MediaType.APPLICATION_JSON).get(Float.class);
+            if (getCash == null) {
+                return 0;
+            }
+        } catch (Exception e) {
             return 0;
         }
         return getCash;
