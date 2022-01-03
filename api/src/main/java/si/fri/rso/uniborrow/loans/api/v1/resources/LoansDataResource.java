@@ -56,15 +56,16 @@ public class LoansDataResource {
     @POST
     @Path("/{loanId}/accept")
     public Response acceptLoan(@PathParam("loanId") Integer loanId) {
-        LoanEntity acceptedLoan = loansDataProviderBean.acceptLoan(loanId);
-        if (acceptedLoan == null) {
+        LoanEntity loan = loansDataProviderBean.getLoan(loanId);
+        if (loan == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        float receivingCash = cashService.getUserCash(acceptedLoan.getFromId());
-        if (receivingCash > acceptedLoan.getPrice()) {
-            itemsService.markItemOnLoan(acceptedLoan.getItemId());
-            boolean cashSent = cashService.sendCashFromTo(acceptedLoan.getPrice(), acceptedLoan.getFromId(), acceptedLoan.getToId());
+        float receivingCash = cashService.getUserCash(loan.getToId());
+        if (receivingCash > loan.getPrice()) {
+            boolean cashSent = cashService.sendCashFromTo(loan.getPrice(), loan.getFromId(), loan.getToId());
             if (cashSent) {
+                itemsService.markItemOnLoan(loan.getItemId());
+                LoanEntity acceptedLoan = loansDataProviderBean.acceptLoan(loanId);
                 return Response.status(Response.Status.OK).entity(acceptedLoan).build();
             } else {
                 return Response.status(Response.Status.EXPECTATION_FAILED).entity("CASH WAS NOT SENT.").build();
@@ -94,19 +95,6 @@ public class LoansDataResource {
                 || loanEntity.getStartTime().isBefore(Instant.now()) || loanEntity.getEndTime().isBefore(loanEntity.getStartTime())
         ) {
             return Response.status(Response.Status.BAD_REQUEST).entity(loanEntity).build();
-        } else {
-            loanEntity = loansDataProviderBean.createLoan(loanEntity);
-        }
-        return Response.status(Response.Status.OK).entity(loanEntity).build();
-    }
-
-    @POST
-    public Response createLoan(LoanEntity loanEntity) {
-        if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
-                loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
-                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId())
-        ) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
         } else {
             loanEntity = loansDataProviderBean.createLoan(loanEntity);
         }
