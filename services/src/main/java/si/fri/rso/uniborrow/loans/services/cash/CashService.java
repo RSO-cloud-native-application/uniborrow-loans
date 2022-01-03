@@ -27,19 +27,19 @@ public class CashService {
     }
 
     public float getUserCash(Integer userId) {
-        Float getCash;
+        CashInfo getCash;
         try {
             getCash = webTarget.path("/v1/cash")
                     .path(userId.toString())
                     .queryParam("currency", "EUR")
-                    .request(MediaType.APPLICATION_JSON).get(Float.class);
+                    .request(MediaType.APPLICATION_JSON).get(CashInfo.class);
             if (getCash == null) {
                 return 0;
             }
         } catch (Exception e) {
             return 0;
         }
-        return getCash;
+        return getCash.getCurrentCash();
     }
 
 }
