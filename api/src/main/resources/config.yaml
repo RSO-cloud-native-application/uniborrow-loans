@@ -31,6 +31,17 @@ kumuluzee:
       web-instrumentation:
         - name: loans-endpoint
           url-pattern: /v1/loans/*
+  openapi-mp:
+    enabled: true
+    servlet:
+      mapping: /uniborrow-loans/openapi
+    ui:
+      enabled: true
+      mapping: /uniborrow-loans/openapi/ui
+      specification-server: http://35.223.79.242
+  dev:
+    scan-libraries:
+      - loans-models
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
                             <Configuration name="comments">
@@ -53,3 +64,4 @@ kumuluzee:
                             </Configuration>'
 administration:
   maintenance-mode: false
+
