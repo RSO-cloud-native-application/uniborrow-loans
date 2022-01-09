@@ -115,14 +115,10 @@ public class LoansDataResource {
         }
         float receivingCash = cashService.getUserCash(loan.getToId());
         if (receivingCash > loan.getPrice()) {
-            boolean cashSent = cashService.sendCashFromTo(loan.getPrice(), loan.getFromId(), loan.getToId());
-            if (cashSent) {
-                itemsService.markItemOnLoan(loan.getItemId());
-                LoanEntity acceptedLoan = loansDataProviderBean.acceptLoan(loanId);
-                return Response.status(Response.Status.OK).entity(acceptedLoan).build();
-            } else {
-                return Response.status(Response.Status.EXPECTATION_FAILED).entity("CASH WAS NOT SENT.").build();
-            }
+            cashService.sendCashFromToAsync(loan.getPrice(), loan.getFromId(), loan.getToId());
+            itemsService.markItemOnLoanAsync(loan.getItemId());
+            LoanEntity acceptedLoan = loansDataProviderBean.acceptLoan(loanId);
+            return Response.status(Response.Status.OK).entity(acceptedLoan).build();
         } else {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity("NOT ENOUGH CASH").build();
         }
