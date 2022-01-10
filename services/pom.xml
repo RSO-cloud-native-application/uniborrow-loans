@@ -38,16 +38,11 @@
             <artifactId>kumuluzee-rest-core</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.kumuluz.ee.metrics</groupId>
             <artifactId>kumuluzee-metrics-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.kumuluz.ee.rest-client</groupId>
-            <artifactId>kumuluzee-rest-client</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -56,10 +51,6 @@
         <dependency>
             <artifactId>kumuluzee-logs-log4j2</artifactId>
             <groupId>com.kumuluz.ee.logs</groupId>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.fault.tolerance</groupId>
-            <artifactId>kumuluzee-fault-tolerance-smallrye</artifactId>
         </dependency>
         <dependency>
             <groupId>si.fri.rso.uniborrow</groupId>

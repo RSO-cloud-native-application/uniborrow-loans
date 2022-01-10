@@ -1,37 +1,38 @@
 package si.fri.rso.uniborrow.loans.services.cash;
 
 import com.kumuluz.ee.discovery.annotations.DiscoverService;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @ApplicationScoped
 public class CashService {
-    private Logger log = Logger.getLogger(CashService.class.getName());
 
     @Inject
     @DiscoverService(value = "uniborrow-cash-service", environment = "dev", version = "1.0.0")
-    private URL serviceUrl;
+    private WebTarget webTarget;
 
-    public void sendCashFromToAsync(Float amount, Integer fromUserId, Integer toUserId) {
-        CashClient cashClient = RestClientBuilder.newBuilder().baseUrl(serviceUrl).build(CashClient.class);
-        cashClient.sendCashAsync(fromUserId, toUserId, amount, "EUR")
-                .whenComplete((p, e) -> log.log(Level.INFO, "Transaction " + p.toString() + " was succesfull."))
-                .exceptionally(e -> {
-                    log.log(Level.WARNING, "Transaction was not succesfull.");
-                    return null;
-                });
+    public boolean sendCashFromTo(Float amount, Integer fromUserId, Integer toUserId) {
+        Response sendCash = webTarget.path("/v1/cash")
+                .path(fromUserId.toString())
+                .path("send")
+                .path(toUserId.toString())
+                .queryParam("amount", amount)
+                .queryParam("currency", "EUR")
+                .request(MediaType.APPLICATION_JSON).post(null);
+        return sendCash.getStatus() == 200;
     }
 
     public float getUserCash(Integer userId) {
-        CashClient cashClient = RestClientBuilder.newBuilder().baseUrl(serviceUrl).build(CashClient.class);
         CashInfo getCash;
         try {
-            getCash = cashClient.getCashByUserId(userId, "EUR");
+            getCash = webTarget.path("/v1/cash")
+                    .path(userId.toString())
+                    .queryParam("currency", "EUR")
+                    .request(MediaType.APPLICATION_JSON).get(CashInfo.class);
             if (getCash == null) {
                 return 0;
             }
