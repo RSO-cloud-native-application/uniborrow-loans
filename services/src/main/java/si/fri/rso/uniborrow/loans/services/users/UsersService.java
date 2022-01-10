@@ -20,9 +20,16 @@ public class UsersService {
     @DiscoverService(value = "uniborrow-users-service", version = "1.0.0", environment = "dev")
     private WebTarget webTarget;
 
+    @Timeout(value = 3, unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(requestVolumeThreshold = 3)
+    @Fallback(fallbackMethod = "checkUserExistsFallback")
+    @Retry(maxRetries = 3)
     public boolean checkUserExists(Integer userId) {
         Response userCheck = webTarget.path("/v1/users").path(userId.toString()).request(MediaType.APPLICATION_JSON).buildGet().invoke();
         return userCheck.getStatus() != 404;
     }
 
+    public boolean checkUserExistsFallback(Integer userId) {
+        return false;
+    }
 }
