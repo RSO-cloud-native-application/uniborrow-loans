@@ -173,7 +173,7 @@ public class LoansDataResource {
         loanEntity.setAcceptedState(AcceptedState.PENDING);
         if (loanEntity.getFromId() == null || loanEntity.getStartTime() == null ||
                 loanEntity.getItemId() == null || loanEntity.getToId() == null || loanEntity.getEndTime() == null ||
-                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId())
+                !usersService.checkUserExists(loanEntity.getFromId()) || !usersService.checkUserExists(loanEntity.getToId()) || !itemsService.checkItemAvailable(loanEntity.getItemId())
                 || loanEntity.getEndTime().isBefore(loanEntity.getStartTime())
         ) {
             return Response.status(Response.Status.BAD_REQUEST).entity(loanEntity).build();
