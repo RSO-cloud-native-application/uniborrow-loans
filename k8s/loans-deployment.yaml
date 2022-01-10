@@ -13,7 +13,7 @@ spec:
         app: uniborrow-loans
     spec:
       containers:
-        - image: efodx/uniborrow-loans:2022-01-11-04-21-21
+        - image: efodx/uniborrow-loans:2022-01-11-05-05-57
           name: uniborrow-loans
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
@@ -43,7 +43,7 @@ spec:
             httpGet:
               path: /health/live
               port: server
-            initialDelaySeconds: 15
+            initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 3
           readinessProbe:
