@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 public class ItemsService {
 
     private Logger log = Logger.getLogger(ItemsService.class.getName());
-    //@Inject
-    //@DiscoverService(value = "uniborrow-items-service", environment = "dev", version = "1.0.0")
-    private WebTarget webTarget = ClientBuilder.newClient().target("http://items:8080/");
+    @Inject
+    @DiscoverService(value = "uniborrow-items-service", environment = "dev", version = "1.0.0")
+    private WebTarget webTarget;
 
     public boolean checkItemAvailable(Integer itemId) {
         Response response = webTarget.path("v1/items").path(itemId.toString()).request(MediaType.APPLICATION_JSON).buildGet().invoke();
