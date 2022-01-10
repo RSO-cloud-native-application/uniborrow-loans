@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 public class UsersService {
 
     @Inject
-    @DiscoverService(value = "uniborrow-users-service", environment = "dev", version = "1.0.0")
+    @DiscoverService(value = "uniborrow-users-service", version = "1.0.0", environment = "dev")
     private WebTarget webTarget;
 
     @Timeout(value = 4, unit = ChronoUnit.SECONDS)
