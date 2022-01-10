@@ -13,7 +13,7 @@ spec:
         app: uniborrow-loans
     spec:
       containers:
-        - image: efodx/uniborrow-loans:2022-01-11-04-16-56
+        - image: efodx/uniborrow-loans:2022-01-11-04-21-21
           name: uniborrow-loans
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
