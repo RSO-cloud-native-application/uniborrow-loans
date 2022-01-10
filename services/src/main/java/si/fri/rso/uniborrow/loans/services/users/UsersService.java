@@ -8,7 +8,6 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -21,17 +20,13 @@ public class UsersService {
     @DiscoverService(value = "uniborrow-users-service", environment = "dev", version = "1.0.0")
     private WebTarget webTarget;
 
-    @Timeout(value = 2, unit = ChronoUnit.SECONDS)
-    @CircuitBreaker(requestVolumeThreshold = 3)
+    @Timeout(value = 4, unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(requestVolumeThreshold = 15)
     @Fallback(fallbackMethod = "checkUserExistsFallback")
     @Retry(maxRetries = 3)
     public boolean checkUserExists(Integer userId) {
-        try {
-            Response userCheck = webTarget.path("/v1/users").path(userId.toString()).request(MediaType.APPLICATION_JSON).buildGet().invoke();
-            return userCheck.getStatus() != 404;
-        } catch (Exception e) {
-            throw new InternalServerErrorException(e);
-        }
+        Response userCheck = webTarget.path("/v1/users").path(userId.toString()).request(MediaType.APPLICATION_JSON).buildGet().invoke();
+        return userCheck.getStatus() != 404;
     }
 
     public boolean checkUserExistsFallback(Integer userId) {
